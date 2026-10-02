@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dipfs — Decomposition Into Parts for Sinograms</title>
+<meta name="description" content="A dependency-free JavaScript library that decomposes Chinese characters into their parts: structure, components, names, readings and traditional forms. 8,183 characters, 1,596 parts.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="./">dipfs<span class="dot">.</span></a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="api.html">API</a>
+      <a href="data.html">Data</a>
+      <a href="https://github.com/tyzpkaw-cpu/dipfs">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main>
+<div class="wrap">
+
+<section class="hero">
+  <h1>Decomposition Into Parts for Sinograms</h1>
+  <p class="lede">dipfs is a small, dependency-free JavaScript library that breaks Chinese
+  characters into their component parts — with each part's name and reading, the character's
+  structure class, and its traditional forms. It covers <strong>8,183 characters</strong>,
+  <strong>1,596 distinct parts</strong> and <strong>2,546 traditional-form mappings</strong>.</p>
+  <div class="cta">
+    <a class="btn" href="#demo">Try it</a>
+    <a class="btn ghost" href="api.html">Read the API</a>
+  </div>
+</section>
+
+<section id="demo">
+  <h2>Try it</h2>
+  <p>Type or paste Chinese text — every character is decomposed by the library, live in your browser.</p>
+  <input id="q" type="text" value="好汉" autocomplete="off" spellcheck="false" aria-label="Chinese text">
+  <div class="chips">
+    <button data-q="好汉">好汉</button>
+    <button data-q="明月白霜">明月白霜</button>
+    <button data-q="赢">赢</button>
+    <button data-q="龟">龟</button>
+    <button data-q="汉字">汉字</button>
+    <button data-q="这">这</button>
+  </div>
+  <div id="out" class="cards" aria-live="polite"></div>
+  <div id="partbox" hidden>
+    <h3>Characters with <span id="part-title"></span></h3>
+    <div id="part-chars" class="chars"></div>
+  </div>
+</section>
+
+<section id="what">
+  <h2>What it is</h2>
+  <ul>
+    <li>An <strong>ES module</strong> with no dependencies (~5 KB) — works in the browser and in Node.js 18+.</li>
+    <li><strong>Structure, parts, names, readings.</strong> For 好 you get <code>left–right</code>, 女 (nǚ) and 子 (zi).</li>
+    <li><strong>Traditional forms</strong> from the General Standard Chinese Characters table: 这 → 這, 发 → 發 髮.</li>
+    <li><strong>Lazy data loading.</strong> The dataset is split into 16 chunks of 512 characters; showing one character fetches a single ~60 KB chunk.</li>
+    <li><strong>Reverse lookup.</strong> <code>charsWith('氵')</code> returns every character that contains 氵.</li>
+    <li>Compiled from the dataset of the <a href="https://github.com/27gscn/zuxia-ime">Zuxia IME</a>, a Chinese input method where this decomposition drives the parts window and the code table.</li>
+  </ul>
+</section>
+
+<section id="quickstart">
+  <h2>Quick start</h2>
+  <p>In the browser, import the module straight from this site:</p>
+  <pre><code>import { decompose } from 'https://dipfs.js.org/dipfs.js';
+
+const results = await decompose('好汉');
+for (const r of results) {
+  console.log(r.char, r.structure.en, r.parts.map((p) =&gt; p.glyph).join(' + '));
+}
+// 好 left–right 女 + 子
+// 汉 left–right 氵 + 又</code></pre>
+  <p>In Node.js, keep <code>dipfs.js</code> and the <code>data/</code> directory together and import the file:</p>
+  <pre><code>import { lookup, charsWith } from './dipfs.js';
+
+await lookup('好');
+// { char: '好', structure: { code: 'z', … }, parts: [ 女, 子 ], traditional: [] }
+
+const parts = await charsWith('氵');
+console.log(parts.length);          // 523
+console.log(parts.includes('汉'));  // true</code></pre>
+  <p>See the <a href="api.html">API reference</a> for everything else.</p>
+</section>
+
+<section id="structures">
+  <h2>Structure classes</h2>
+  <table>
+    <thead><tr><th>Code</th><th>Class</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td><code>z</code></td><td>left–right 左右</td><td>好 汉 明</td></tr>
+      <tr><td><code>s</code></td><td>top–bottom 上下</td><td>想 字 花</td></tr>
+      <tr><td><code>b</code></td><td>enclosure 包围</td><td>回 国 风</td></tr>
+      <tr><td><code>d</code></td><td>standalone 独体</td><td>一 月 山</td></tr>
+      <tr><td><code>p</code></td><td>pyramid / other 品字形及其他</td><td>品 森 坐</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="zh">
+  <h2>中文说明</h2>
+  <p>dipfs 是一个拆字用的 JavaScript 库：给它一个汉字，它会给出这个字的结构（左右、上下、包围、独体、其他）、
+  组成部件、每个部件的名称与读音，以及繁体写法。数据来自足下输入法的字表，覆盖 8183 个字、1596 个部件，
+  其中 2546 个字有繁体写法。库本身零依赖，浏览器和 Node.js 都能用；数据按 512 字一块分片，按需加载。</p>
+  <p>本页的演示就是直接调用这个库；接口说明见 <a href="api.html">API</a>，数据来源与许可见
+  <a href="data.html">Data</a>。</p>
+</section>
+
+</div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p id="stats-line" class="stats"></p>
+    <p>Code: MIT. Data: see <a href="data.html">data sources &amp; licenses</a>.
+       Library and dataset compiled by the <a href="https://github.com/27gscn/zuxia-ime">Zuxia IME</a> project.</p>
+  </div>
+</footer>
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+{
+  "name": "dipfs",
+  "version": "0.1.0",
+  "generated": "2026-10-02",
+  "source": "data-src/zuxia.parts.tsv (Zuxia IME data pipeline)",
+  "chars": 8183,
+  "partGlyphs": 1596,
+  "partNames": 1645,
+  "traditionalForms": 2546,
+  "structures": {
+    "z": 5443,
+    "s": 1780,
+    "b": 646,
+    "d": 259,
+    "p": 55
+  },
+  "chunks": [
+    {
+      "file": "chars-00.json",
+      "first": 12295,
+      "last": 20889
+    },
+    {
+      "file": "chars-01.json",
+      "first": 20891,
+      "last": 21896
+    },
+    {
+      "file": "chars-02.json",
+      "first": 21897,
+      "last": 23172
+    },
+    {
+      "file": "chars-03.json",
+      "first": 23174,
+      "last": 24469
+    },
+    {
+      "file": "chars-04.json",
+      "first": 24471,
+      "last": 25630
+    },
+    {
+      "file": "chars-05.json",
+      "first": 25632,
+      "last": 26864
+    },
+    {
+      "file": "chars-06.json",
+      "first": 26865,
+      "last": 28183
+    },
+    {
+      "file": "chars-07.json",
+      "first": 28186,
+      "last": 29619
+    },
+    {
+      "file": "chars-08.json",
+      "first": 29622,
+      "last": 30791
+    },
+    {
+      "file": "chars-09.json",
+      "first": 30794,
+      "last": 32494
+    },
+    {
+      "file": "chars-10.json",
+      "first": 32495,
+      "last": 33526
+    },
+    {
+      "file": "chars-11.json",
+      "first": 33527,
+      "last": 34905
+    },
+    {
+      "file": "chars-12.json",
+      "first": 34912,
+      "last": 36500
+    },
+    {
+      "file": "chars-13.json",
+      "first": 36508,
+      "last": 38194
+    },
+    {
+      "file": "chars-14.json",
+      "first": 38195,
+      "last": 39739
+    },
+    {
+      "file": "chars-15.json",
+      "first": 39740,
+      "last": 200413
+    }
+  ]
+}

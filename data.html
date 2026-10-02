@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data sources &amp; licenses — dipfs</title>
+<meta name="description" content="Where the dipfs dataset comes from: Make Me a Hanzi, CJKVI IDS, Chinese national standards GF 0013-2009, GF 0014-2009 and the General Standard Chinese Characters table.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="./">dipfs<span class="dot">.</span></a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="api.html">API</a>
+      <a href="data.html">Data</a>
+      <a href="https://github.com/tyzpkaw-cpu/dipfs">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main>
+<div class="wrap">
+<h1>Data sources &amp; licenses</h1>
+<p class="lede">The dataset covers 8,183 characters: structure class, parts with names and
+readings, and traditional forms. It is compiled from open sources by the
+<a href="https://github.com/27gscn/zuxia-ime">Zuxia IME</a> project. The code in this
+repository is MIT; the data keeps the terms of the sources below.</p>
+
+<h2>Sources</h2>
+<table>
+<thead><tr><th>Source</th><th>What it contributes</th><th>Terms</th></tr></thead>
+<tbody>
+<tr><td><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (<code>dictionary.txt</code>)</td>
+    <td>structure, components, component and character readings</td>
+    <td>LGPL-3.0-or-later — see <code>licenses/NOTICE-Make-Me-a-Hanzi.txt</code></td></tr>
+<tr><td><a href="https://github.com/cjkvi/cjkvi-ids">CJKVI IDS</a> (<code>ids.txt</code>)</td>
+    <td>structure refinement, fallback components</td>
+    <td><code>ids.txt</code> is derived from the <a href="http://www.chise.org/">CHISE project</a>; see <code>licenses/NOTICE-CJKVI-IDS.md</code></td></tr>
+<tr><td>GF 0013—2009 《现代常用独体字表》</td>
+    <td>standalone-character classification (the <code>d</code> structure)</td>
+    <td>Chinese national standard</td></tr>
+<tr><td>GF 0014—2009 《现代常用字部件及部件名称规范》</td>
+    <td>official component names (宝盖, 病字框, …)</td>
+    <td>Chinese national standard</td></tr>
+<tr><td>《通用规范汉字表》 (2013), Annex 1</td>
+    <td>traditional forms for 2,546 characters</td>
+    <td>Chinese national standard; the machine-readable transcription is Apache-2.0</td></tr>
+<tr><td>The Zuxia IME / 应物 projects</td>
+    <td>curated component names and structure overrides</td>
+    <td>by the source project's authors</td></tr>
+</tbody>
+</table>
+
+<h2>How it is built</h2>
+<ol>
+  <li>The Zuxia IME pipeline (<code>generate_zuxia.py</code>) merges the sources into
+      <code>zuxia.parts.tsv</code> — one line per character: a structure code, then one column per
+      part (<code>part|names|keys|reading|per-name</code>), then optional traditional forms.</li>
+  <li><code>tools/build-data.py</code> in this repository converts the TSV into the JSON files under
+      <code>data/</code>: characters sorted by code point, split into 16 chunks, plus the reverse
+      index <code>parts.json</code>.</li>
+  <li>Both the TSV (<code>data-src/zuxia.parts.tsv</code>) and the script ship with the repository,
+      so the JSON can be rebuilt and audited.</li>
+</ol>
+
+<h2>License summary</h2>
+<ul>
+  <li><strong>Code</strong> (module, tests, site): MIT — see <code>LICENSE</code>.</li>
+  <li><strong>Data</strong> (<code>data/</code>, <code>data-src/</code>): distributed under the terms
+      of the sources above. Content derived from Make Me a Hanzi is available under the
+      LGPL-3.0-or-later; content derived from CJKVI IDS follows the CHISE project's terms.</li>
+  <li>Full texts and notices: <code>licenses/LICENSE-LGPL-3.0.txt</code>,
+      <code>licenses/LICENSE-GPL-2.0.txt</code>, <code>licenses/LICENSE-Apache-2.0.txt</code>,
+      <code>licenses/NOTICE-Make-Me-a-Hanzi.txt</code>, <code>licenses/NOTICE-CJKVI-IDS.md</code>.</li>
+</ul>
+
+<section class="zh">
+  <h2>中文说明</h2>
+  <p>数据来源：Make Me a Hanzi（结构与部件，LGPL-3.0）、CJKVI-IDS（结构校正与补充部件）、
+  GF 0013—2009《现代常用独体字表》（独体字）、GF 0014—2009《现代常用字部件及部件名称规范》（部件名称）、
+  《通用规范汉字表》附件 1（繁体对照，2546 字）；部件名称与结构的人工校正来自足下／应物项目。</p>
+  <p>代码用 MIT 许可；数据沿用各来源的许可，全文见仓库 <code>licenses/</code> 目录。</p>
+</section>
+</div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>Code: MIT. Data: see the sources above.</p>
+  </div>
+</footer>
+</body>
+</html>

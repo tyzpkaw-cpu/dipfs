@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API — dipfs</title>
+<meta name="description" content="dipfs API reference: decompose, lookup, charsWith, preload, stats, structureInfo, loadAll.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="./">dipfs<span class="dot">.</span></a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="api.html">API</a>
+      <a href="data.html">Data</a>
+      <a href="https://github.com/tyzpkaw-cpu/dipfs">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main>
+<div class="wrap">
+<h1>API reference</h1>
+<p class="lede">Everything is exported from <code>dipfs.js</code>. The data under <code>data/</code>
+is loaded lazily and cached; you never have to think about it.</p>
+
+<h2>Loading the module</h2>
+<pre><code>// Browser — data/ is resolved relative to the module itself
+import { decompose } from 'https://dipfs.js.org/dipfs.js';
+
+// Node.js (18+) — keep dipfs.js and data/ together
+import { decompose } from './dipfs.js';</code></pre>
+<p>No configuration and no dependencies. In Node the module reads the data with
+<code>node:fs</code>; in the browser it uses <code>fetch</code>.</p>
+
+<h2>Functions</h2>
+<table>
+<thead><tr><th>Function</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td><code>decompose(text)</code></td><td><code>Promise&lt;(Record | null)[]&gt;</code> — one entry per code point, in order. Characters outside the dataset (Latin letters, spaces, emoji, rare hanzi) are <code>null</code>.</td></tr>
+<tr><td><code>lookup(char)</code></td><td><code>Promise&lt;Record | null&gt;</code> — a single character. Throws <code>TypeError</code> for anything longer than one code point.</td></tr>
+<tr><td><code>charsWith(part)</code></td><td><code>Promise&lt;string[]&gt;</code> — every character that lists <code>part</code> among its parts; <code>[]</code> for an unknown part. Whole-character entries are not indexed.</td></tr>
+<tr><td><code>preload(text)</code></td><td><code>Promise&lt;number&gt;</code> — fetch the chunks covering <code>text</code> ahead of time; resolves to the number of chunks actually fetched.</td></tr>
+<tr><td><code>stats()</code></td><td><code>Promise&lt;Meta&gt;</code> — dataset metadata: counts, structure distribution, chunk table.</td></tr>
+<tr><td><code>structureInfo(code)</code></td><td><code>{ code, zh, en } | null</code> — the five structure classes.</td></tr>
+<tr><td><code>loadAll()</code></td><td><code>Promise&lt;number&gt;</code> — load every chunk (handy in Node or for offline use); resolves to the character count.</td></tr>
+</tbody>
+</table>
+
+<h2>Record</h2>
+<pre><code>{
+  char: '好',
+  structure: { code: 'z', zh: '左右', en: 'left–right' },
+  parts: [
+    { glyph: '女', reading: 'nǚ', key: 'n', whole: false,
+      names: [ { name: '女', reading: 'nǚ', key: 'n' } ] },
+    { glyph: '子', reading: 'zi', key: 'z', whole: false,
+      names: [ { name: '子', reading: 'zi', key: 'z' } ] }
+  ],
+  traditional: []          // [ '這' ] for 这, [ '發', '髮' ] for 发
+}</code></pre>
+<ul>
+  <li><code>names</code> — a part can carry several names: 辶 is 走 or 走之; 亠 is 亠, 头 or 玄字头.
+      The part-level <code>reading</code> and <code>key</code> come from the first name.</li>
+  <li><code>key</code> — the key letter the source IME uses for the part, taken from the name's reading
+      (提手 → <code>t</code>, 宝盖 → <code>b</code>).</li>
+  <li><code>whole</code> — <code>true</code> for the first part of standalone characters: the character
+      itself, named 整字 (“whole character”). For 一 the first part is 一, followed by its strokes.</li>
+  <li>Records are cached and reused between calls; treat them as read-only.</li>
+</ul>
+
+<h2>Data format</h2>
+<table>
+<thead><tr><th>File</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td><code>data/meta.json</code></td><td>counts, structure distribution, and the chunk table (each chunk's file name and first/last code point)</td></tr>
+<tr><td><code>data/chars-NN.json</code></td><td>16 chunks of 512 characters, sorted by code point. Each record is <code>[char, structure, parts, traditional?]</code>, with parts as <code>[[glyph, [[name, reading, key], …]], …]</code></td></tr>
+<tr><td><code>data/parts.json</code></td><td>reverse index: <code>{ "氵": "汉江河海…" }</code></td></tr>
+</tbody>
+</table>
+<p>Rebuild the JSON from the source table with <code>python3 tools/build-data.py</code>.
+To self-host, copy <code>dipfs.js</code> and the <code>data/</code> directory together.</p>
+
+<h2>License</h2>
+<p>Code: MIT. Data: see <a href="data.html">data sources &amp; licenses</a>.</p>
+</div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>Code: MIT. Data: see <a href="data.html">data sources &amp; licenses</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "dipfs",
+  "version": "0.1.0",
+  "description": "Decompose Chinese characters into parts: structure, components, names and readings. Dependency-free ES module.",
+  "type": "module",
+  "main": "dipfs.js",
+  "exports": {
+    ".": "./dipfs.js",
+    "./data/*": "./data/*"
+  },
+  "files": [
+    "dipfs.js",
+    "data/",
+    "DATA-SOURCES.md",
+    "LICENSE",
+    "licenses/"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "build:data": "python3 tools/build-data.py"
+  },
+  "keywords": [
+    "chinese",
+    "hanzi",
+    "sinogram",
+    "decomposition",
+    "cjk",
+    "components",
+    "radicals",
+    "input-method"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tyzpkaw-cpu/dipfs.git"
+  },
+  "homepage": "https://dipfs.js.org/",
+  "engines": {
+    "node": ">=18"
+  }
+}
